@@ -147,7 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _inputReader: {fileID: 11400000, guid: 0b8894fca33bb4f4a96530f88df8e89b, type: 2}
   _projectileSpawnPoint: {fileID: 970396343506888187}
-  _projectileServerPrefab: {fileID: 5444997273179030430, guid: 5c1b2a4a808e073428775e6ee673ccde, type: 3}
+  _projectileServerPrefab: {fileID: 5444997273179030430, guid: 916f99f8cc0eb464d81f0e36ea80ac31, type: 3}
   _projectileClientPrefab: {fileID: 5444997273179030430, guid: 5c1b2a4a808e073428775e6ee673ccde, type: 3}
   _muzzleFlash: {fileID: 7398953263408284437}
   _playerCollider: {fileID: 6757335866052726802}

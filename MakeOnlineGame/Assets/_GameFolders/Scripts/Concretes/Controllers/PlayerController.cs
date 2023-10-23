@@ -21,6 +21,7 @@ namespace MakeOnlineGame.Controllers
             if (!IsOwner)
             {
                 this.gameObject.layer = 7;
+                _bodyTank.gameObject.layer = 7;
                 return;
             }
 

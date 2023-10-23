@@ -1,4 +1,3 @@
-using System;
 using Cysharp.Threading.Tasks;
 using MakeOnlineGame.Inputs;
 using Unity.Netcode;
@@ -66,7 +65,7 @@ namespace MakeOnlineGame.Combats
         private async void MuzzleFlashShowDisableAsync()
         {
             _muzzleFlash.SetActive(true);
-            await UniTask.Delay(TimeSpan.FromSeconds(_muzzleFlashDuration));
+            await UniTask.Delay(System.TimeSpan.FromSeconds(_muzzleFlashDuration));
             _muzzleFlash.SetActive(false);
         }
 
