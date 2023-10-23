@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _inpuInputReader: {fileID: 11400000, guid: 0b8894fca33bb4f4a96530f88df8e89b, type: 2}
   _bodyTank: {fileID: 4347865312953844940}
+  _turret: {fileID: 7922488947083127148}
   _rigidbody: {fileID: 4096521796208275837}
   _movementSpeed: 4
   _turningRate: 120

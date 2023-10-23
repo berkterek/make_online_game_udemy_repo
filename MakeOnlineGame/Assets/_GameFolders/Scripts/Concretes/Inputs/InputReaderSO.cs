@@ -12,7 +12,8 @@ namespace MakeOnlineGame.Inputs
 
         public event System.Action<Vector2> OnMovement;
         public event System.Action<bool> OnButtonClick;
-        
+        public Vector2 LookPosition { get; private set; }
+
         void OnEnable()
         {
             if (_input == null)
@@ -36,7 +37,7 @@ namespace MakeOnlineGame.Inputs
 
         public void OnLook(InputAction.CallbackContext context)
         {
-            
+            LookPosition = context.ReadValue<Vector2>();
         }
 
         public void OnFire(InputAction.CallbackContext context)

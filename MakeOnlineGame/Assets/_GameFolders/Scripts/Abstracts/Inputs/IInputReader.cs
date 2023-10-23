@@ -6,5 +6,6 @@ namespace MakeOnlineGame.Abstracts.Inputs
     {
         event System.Action<Vector2> OnMovement;
         event System.Action<bool> OnButtonClick;
+        public Vector2 LookPosition { get; }
     }
 }

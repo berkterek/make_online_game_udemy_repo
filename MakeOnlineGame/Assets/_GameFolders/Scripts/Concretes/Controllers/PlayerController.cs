@@ -8,16 +8,19 @@ namespace MakeOnlineGame.Controllers
     {
         [SerializeField] InputReaderSO _inpuInputReader;
         [SerializeField] Transform _bodyTank;
+        [SerializeField] Transform _turret;
         [SerializeField] Rigidbody2D _rigidbody;
         [SerializeField] float _movementSpeed = 4f;
         [SerializeField] float _turningRate = 30f;
 
         Vector2 _previousInput;
+        Camera _mainCamera;
 
         public override void OnNetworkSpawn()
         {
             if (!IsOwner) return;
-            
+
+            _mainCamera = Camera.main;
             _inpuInputReader.OnMovement += HandleOnMovement;
             _inpuInputReader.OnButtonClick += HandleOnButtonClicked;
         }
@@ -33,10 +36,10 @@ namespace MakeOnlineGame.Controllers
         void Update()
         {
             if (!IsOwner) return;
-            
+
             float zRotation = -_turningRate * Time.deltaTime * _previousInput.x;
-            
-            _bodyTank.Rotate(0f,0f,zRotation);
+
+            _bodyTank.Rotate(0f, 0f, zRotation);
         }
 
         void FixedUpdate()
@@ -46,11 +49,27 @@ namespace MakeOnlineGame.Controllers
             _rigidbody.velocity = _previousInput.y * _movementSpeed * (Vector2)_bodyTank.up;
         }
 
+        void LateUpdate()
+        {
+            if (!IsOwner) return;
+            
+            Vector2 worldLookPosition = _mainCamera.ScreenToWorldPoint(_inpuInputReader.LookPosition);
+
+            Vector2 turretPosition = _turret.position;
+            Vector2 turretLookPosition = new Vector2
+            (
+                worldLookPosition.x - turretPosition.x,
+                worldLookPosition.y - turretPosition.y
+            );
+
+            _turret.up = turretLookPosition;
+        }
+
         void HandleOnMovement(Vector2 value)
         {
             _previousInput = value;
         }
-        
+
         void HandleOnButtonClicked(bool value)
         {
         }

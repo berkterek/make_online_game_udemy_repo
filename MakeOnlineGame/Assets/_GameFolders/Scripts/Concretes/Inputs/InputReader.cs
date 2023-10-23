@@ -9,6 +9,7 @@ namespace MakeOnlineGame.Inputs
 
         public event System.Action<Vector2> OnMovement;
         public event System.Action<bool> OnButtonClick;
+        public Vector2 LookPosition { get; }
 
         public InputReader()
         {
