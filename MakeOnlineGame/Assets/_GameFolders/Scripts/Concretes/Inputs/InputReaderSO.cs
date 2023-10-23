@@ -41,7 +41,8 @@ namespace MakeOnlineGame.Inputs
 
         public void OnFire(InputAction.CallbackContext context)
         {
-            OnButtonClick?.Invoke(context.performed);
+            if(context.performed) OnButtonClick?.Invoke(true);
+            else if(context.canceled) OnButtonClick?.Invoke(false);
         }
     }
 }

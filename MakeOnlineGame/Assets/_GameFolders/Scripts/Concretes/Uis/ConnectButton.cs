@@ -1,5 +1,4 @@
-﻿using System;
-using MakeOnlineGame.Abstracts.Uis;
+﻿using MakeOnlineGame.Abstracts.Uis;
 using MakeOnlineGame.Enums;
 using TMPro;
 using Unity.Netcode;
