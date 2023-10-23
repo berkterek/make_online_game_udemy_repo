@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using MakeOnlineGame.Inputs;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,9 +12,15 @@ namespace MakeOnlineGame.Combats
         [SerializeField] Transform _projectileSpawnPoint;
         [SerializeField] GameObject _projectileServerPrefab;
         [SerializeField] GameObject _projectileClientPrefab;
+        [SerializeField] GameObject _muzzleFlash;
+        [SerializeField] Collider2D _playerCollider;
         [SerializeField] float _projectileSpeed = 0f;
+        [SerializeField] float _fireRate;
+        [SerializeField] float _muzzleFlashDuration;
 
         bool _canFire;
+        float _previousFireTime;
+        float _muzzleFlashTimer;
 
         public override void OnNetworkSpawn()
         {
@@ -35,14 +42,32 @@ namespace MakeOnlineGame.Combats
 
             if (!_canFire) return;
 
+            if (Time.time < (1 / _fireRate) + _previousFireTime) return;
+
             PrimaryFireServerRpc(_projectileSpawnPoint.position, _projectileSpawnPoint.up);
             SpawnClientProjectile(_projectileSpawnPoint.position, _projectileSpawnPoint.up);
+
+            _previousFireTime = Time.time;
         }
 
         void SpawnClientProjectile(Vector3 position, Vector3 direction)
         {
+            MuzzleFlashShowDisableAsync();
             var projectile = Instantiate(_projectileClientPrefab, position, Quaternion.identity);
             projectile.transform.up = direction;
+            projectile.layer = IsOwner ? 8 : 9;
+
+            if (projectile.TryGetComponent(out Rigidbody2D rigidbody2D))
+            {
+                rigidbody2D.velocity = _projectileSpeed * rigidbody2D.transform.up;
+            }
+        }
+
+        private async void MuzzleFlashShowDisableAsync()
+        {
+            _muzzleFlash.SetActive(true);
+            await UniTask.Delay(TimeSpan.FromSeconds(_muzzleFlashDuration));
+            _muzzleFlash.SetActive(false);
         }
 
         [ServerRpc]
@@ -50,7 +75,13 @@ namespace MakeOnlineGame.Combats
         {
             var projectile = Instantiate(_projectileServerPrefab, position, Quaternion.identity);
             projectile.transform.up = direction;
-
+            projectile.layer = IsOwner ? 8 : 9;
+            
+            if (projectile.TryGetComponent(out Rigidbody2D rigidbody2D))
+            {
+                rigidbody2D.velocity = _projectileSpeed * rigidbody2D.transform.up;
+            }
+            
             PrimaryFireClientRpc(position, direction);
         }
 

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5581194891499776155}
   - component: {fileID: 397358923330941203}
   - component: {fileID: 233069012250052267}
-  - component: {fileID: 3945082554089390022}
+  - component: {fileID: 214938026054898864}
   m_Layer: 8
   m_Name: BaseProjectile
   m_TagString: Untagged
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lifeTimeCounterHandler: {fileID: 397358923330941203}
---- !u!50 &3945082554089390022
+--- !u!50 &214938026054898864
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0

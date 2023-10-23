@@ -18,7 +18,11 @@ namespace MakeOnlineGame.Controllers
 
         public override void OnNetworkSpawn()
         {
-            if (!IsOwner) return;
+            if (!IsOwner)
+            {
+                this.gameObject.layer = 7;
+                return;
+            }
 
             _mainCamera = Camera.main;
             _inpuInputReader.OnMovement += HandleOnMovement;
