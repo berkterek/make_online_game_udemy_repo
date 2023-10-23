@@ -22,7 +22,6 @@ namespace MakeOnlineGame.Controllers
 
             _mainCamera = Camera.main;
             _inpuInputReader.OnMovement += HandleOnMovement;
-            _inpuInputReader.OnButtonClick += HandleOnButtonClicked;
         }
 
         public override void OnNetworkDespawn()
@@ -30,7 +29,6 @@ namespace MakeOnlineGame.Controllers
             if (!IsOwner) return;
 
             _inpuInputReader.OnMovement -= HandleOnMovement;
-            _inpuInputReader.OnButtonClick -= HandleOnButtonClicked;
         }
 
         void Update()
@@ -68,10 +66,6 @@ namespace MakeOnlineGame.Controllers
         void HandleOnMovement(Vector2 value)
         {
             _previousInput = value;
-        }
-
-        void HandleOnButtonClicked(bool value)
-        {
         }
     }
 }
