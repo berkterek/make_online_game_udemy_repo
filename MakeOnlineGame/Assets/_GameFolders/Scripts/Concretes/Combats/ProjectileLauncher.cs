@@ -12,7 +12,6 @@ namespace MakeOnlineGame.Combats
         [SerializeField] GameObject _projectileServerPrefab;
         [SerializeField] GameObject _projectileClientPrefab;
         [SerializeField] GameObject _muzzleFlash;
-        [SerializeField] Collider2D _playerCollider;
         [SerializeField] float _projectileSpeed = 0f;
         [SerializeField] float _fireRate;
         [SerializeField] float _muzzleFlashDuration;
@@ -75,6 +74,10 @@ namespace MakeOnlineGame.Combats
             var projectile = Instantiate(_projectileServerPrefab, position, Quaternion.identity);
             projectile.transform.up = direction;
             projectile.layer = IsOwner ? 8 : 9;
+            if (projectile.TryGetComponent(out DealDamageOnContact dealDamageOnContact))
+            {
+                dealDamageOnContact.SetOwner(OwnerClientId);
+            }
             
             if (projectile.TryGetComponent(out Rigidbody2D rigidbody2D))
             {
