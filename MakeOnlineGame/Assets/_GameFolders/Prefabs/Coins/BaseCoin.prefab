@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -4143415972004315084}
   - component: {fileID: 3733214109434226724}
   - component: {fileID: 4908168495629649172}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BaseCoin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,7 +130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1550214626465125315}
   - component: {fileID: 8780105303879459854}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
