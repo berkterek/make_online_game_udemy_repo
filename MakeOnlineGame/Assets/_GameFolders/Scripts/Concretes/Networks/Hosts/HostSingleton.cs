@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-namespace MakeOnlineGame.Networks.Clients
+namespace MakeOnlineGame.Networks.Hosts
 {
     public class HostSingleton : MonoBehaviour
     {
-        HostManager _hostManager;
+        public HostManager HostManager { get; private set; }
         
         public static HostSingleton Instance { get; private set; }
 
@@ -21,9 +21,9 @@ namespace MakeOnlineGame.Networks.Clients
             }
         }
 
-        public void CreateClient()
+        public void CreateHost()
         {
-            _hostManager = new HostManager();
+            HostManager = new HostManager();
         }
     }
 }

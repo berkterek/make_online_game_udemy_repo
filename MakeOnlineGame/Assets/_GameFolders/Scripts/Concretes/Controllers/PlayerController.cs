@@ -1,4 +1,5 @@
-﻿using MakeOnlineGame.Inputs;
+﻿using Cysharp.Threading.Tasks;
+using MakeOnlineGame.Inputs;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ namespace MakeOnlineGame.Controllers
                 return;
             }
 
-            _mainCamera = Camera.main;
+            FindMainCameraAsync();
             _inpuInputReader.OnMovement += HandleOnMovement;
         }
 
@@ -55,6 +56,8 @@ namespace MakeOnlineGame.Controllers
         void LateUpdate()
         {
             if (!IsOwner) return;
+
+            if (_mainCamera == null) return;
             
             Vector2 worldLookPosition = _mainCamera.ScreenToWorldPoint(_inpuInputReader.LookPosition);
 
@@ -71,6 +74,15 @@ namespace MakeOnlineGame.Controllers
         void HandleOnMovement(Vector2 value)
         {
             _previousInput = value;
+        }
+
+        private async void FindMainCameraAsync()
+        {
+            while (_mainCamera == null)
+            {
+                _mainCamera = Camera.main;
+                await UniTask.Yield();
+            }
         }
     }
 }

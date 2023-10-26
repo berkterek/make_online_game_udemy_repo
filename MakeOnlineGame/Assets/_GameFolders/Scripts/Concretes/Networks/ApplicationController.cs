@@ -1,4 +1,5 @@
 using MakeOnlineGame.Networks.Clients;
+using MakeOnlineGame.Networks.Hosts;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -28,7 +29,7 @@ namespace MakeOnlineGame.Controllers
                     bool isClientAuth = await clientSingletonVariable.CreateClientAsync();
 
                     var hostSingletonVariable = Instantiate(_hostSingleton);
-                    hostSingletonVariable.CreateClient();
+                    hostSingletonVariable.CreateHost();
 
                     if (isClientAuth)
                     {
