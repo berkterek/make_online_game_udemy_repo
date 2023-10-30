@@ -1,5 +1,6 @@
 using MakeOnlineGame.Networks.Clients;
 using MakeOnlineGame.Networks.Hosts;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ namespace MakeOnlineGame.Controllers
 {
     public class MenuController : MonoBehaviour
     {
+        [SerializeField] TMP_InputField _joinCodeInputField;
         [SerializeField] Button _hostButton;
         [SerializeField] Button _clientButton;
 
@@ -29,7 +31,7 @@ namespace MakeOnlineGame.Controllers
         
         async void HandleOnClientButtonClicked()
         {
-            // await ClientSingleton.Instance.ClientManager.
+            await ClientSingleton.Instance.ClientManager.StartClientAsync(_joinCodeInputField.text);
         }
     }    
 }

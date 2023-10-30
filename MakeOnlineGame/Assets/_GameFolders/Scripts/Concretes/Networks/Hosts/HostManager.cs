@@ -41,7 +41,8 @@ namespace MakeOnlineGame.Networks.Hosts
 
             var unityTransport = NetworkManager.Singleton.GetComponent<UnityTransport>();
             
-            unityTransport.SetRelayServerData(new RelayServerData(_allocation, "udp"));
+            //unityTransport.SetRelayServerData(new RelayServerData(_allocation, "udp"));
+            unityTransport.SetRelayServerData(new RelayServerData(_allocation, "dtls"));
 
             NetworkManager.Singleton.StartHost();
 

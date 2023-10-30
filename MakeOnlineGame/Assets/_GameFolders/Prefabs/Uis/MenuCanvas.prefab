@@ -1444,6 +1444,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b1df18b9b4e97340a819019ad419563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _joinCodeInputField: {fileID: 5279778684741469302}
   _hostButton: {fileID: 6969374518535657060}
   _clientButton: {fileID: 1884623435366122900}
 --- !u!224 &5254961891870047931 stripped
