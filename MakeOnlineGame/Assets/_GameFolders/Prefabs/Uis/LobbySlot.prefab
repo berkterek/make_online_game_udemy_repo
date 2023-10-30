@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 5821122352670335690}
   - component: {fileID: 2635372381021731580}
   - component: {fileID: 3156282259392265343}
+  - component: {fileID: 6904016583101357137}
   m_Layer: 5
   m_Name: LobbySlot
   m_TagString: Untagged
@@ -212,6 +213,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6904016583101357137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1194476019866806457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f042fcdbb53f4c13ad515f1ac003e02b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _lobbyNameText: {fileID: 1526197319513704227}
+  _lobbyPlayerText: {fileID: 4424783144101055844}
 --- !u!1 &3030413655669391361
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,7 +347,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8994357780534346582}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6904016583101357137}
+        m_TargetAssemblyTypeName: MakeOnlineGame.Controllers.LobbySlotController,
+          Assembly-CSharp
+        m_MethodName: Join
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3466406632525287826
 GameObject:
   m_ObjectHideFlags: 0
