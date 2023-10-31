@@ -1,2 +1,2 @@
 # make_online_game_udemy_repo
-This repo created by education purpose on GameDev Course
+This repo created by education purpose on GameDev Course. Unity version 2022.3.71f and its 2d multiplayer game. Using Unity Netcode, Unity Authentication, Relay Service, Unity Lobby.
