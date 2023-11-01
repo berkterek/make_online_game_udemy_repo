@@ -1,5 +1,4 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
@@ -27,7 +26,7 @@ namespace MakeOnlineGame.Networks.Clients
 
         public async void GoToMenu()
         {
-            await SceneManager.LoadSceneAsync(1);
+            await SceneManager.LoadSceneAsync("Menu");
         }
 
         public async UniTask StartClientAsync(string joinCode)
@@ -36,7 +35,7 @@ namespace MakeOnlineGame.Networks.Clients
             {
                 _allocation = await Relay.Instance.JoinAllocationAsync(joinCode);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 Debug.Log(e);
             }
