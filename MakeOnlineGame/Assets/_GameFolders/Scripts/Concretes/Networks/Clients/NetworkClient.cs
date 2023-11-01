@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using MakeOnlineGame.Networks.Shares;
-using Unity.Netcode;
-using UnityEngine;
+﻿using Unity.Netcode;
 using UnityEngine.SceneManagement;
 
 namespace MakeOnlineGame.Networks.Clients
 {
-    public class NetworkClient
+    public class NetworkClient : System.IDisposable 
     {
         const string MENU_NAME = "Menu";
         readonly NetworkManager _networkManager;
@@ -17,12 +14,7 @@ namespace MakeOnlineGame.Networks.Clients
 
             _networkManager.OnClientDisconnectCallback += HandleOnClientOnDisconnect;
         }
-
-        ~NetworkClient()
-        {
-            _networkManager.OnClientDisconnectCallback -= HandleOnClientOnDisconnect;
-        }
-
+        
         void HandleOnClientOnDisconnect(ulong clientNetworkId)
         {
             if (clientNetworkId != 0 && clientNetworkId != _networkManager.LocalClient.ClientId) return;
@@ -38,6 +30,21 @@ namespace MakeOnlineGame.Networks.Clients
             {
                 _networkManager.Shutdown();
             }
+        }
+
+        void ReleaseUnmanagedResources()
+        {
+            _networkManager.OnClientDisconnectCallback -= HandleOnClientOnDisconnect;
+        }
+
+        public void Dispose()
+        {
+            if (_networkManager != null)
+            {
+                ReleaseUnmanagedResources();    
+            }
+            
+            System.GC.SuppressFinalize(this);
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using MakeOnlineGame.Controllers;
 using MakeOnlineGame.Networks.Servers;
@@ -17,12 +19,14 @@ using UnityEngine.SceneManagement;
 
 namespace MakeOnlineGame.Networks.Hosts
 {
-    public class HostManager
+    public class HostManager : System.IDisposable
     {
         const int MAX_CONNECTION = 20;
 
         NetworkServer _networkServer;
         Allocation _allocation;
+        CancellationTokenSource _cancellationTokenSource;
+        CancellationToken _cancellationToken;
         string _joinCode;
         string _lobbyId;
 
@@ -96,11 +100,34 @@ namespace MakeOnlineGame.Networks.Hosts
 
         private async UniTask HearthBeatLobbyAsync(float waitSeconds)
         {
+            _cancellationTokenSource = new CancellationTokenSource();
+            _cancellationToken = _cancellationTokenSource.Token; 
             while (true)
             {
                 await Lobbies.Instance.SendHeartbeatPingAsync(_lobbyId);
-                await UniTask.Delay(System.TimeSpan.FromSeconds(waitSeconds), false, PlayerLoopTiming.Update);
+                await UniTask.Delay(System.TimeSpan.FromSeconds(waitSeconds), false, PlayerLoopTiming.Update,_cancellationToken);
             }
+        }
+
+        public async void Dispose()
+        {
+            _cancellationTokenSource.Cancel();
+
+            if (!string.IsNullOrEmpty(_lobbyId))
+            {
+                try
+                {
+                    await Lobbies.Instance.DeleteLobbyAsync(_lobbyId);
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e);
+                }
+
+                _lobbyId = string.Empty;
+            }
+            
+            _networkServer?.Dispose();
         }
     }
 }

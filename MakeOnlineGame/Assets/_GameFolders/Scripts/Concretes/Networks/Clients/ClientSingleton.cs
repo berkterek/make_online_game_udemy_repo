@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace MakeOnlineGame.Networks.Clients
@@ -19,6 +20,11 @@ namespace MakeOnlineGame.Networks.Clients
             {
                 Destroy(this.gameObject);
             }
+        }
+
+        void OnDestroy()
+        {
+            ClientManager.Dispose();
         }
 
         public async UniTask<bool> CreateClientAsync()

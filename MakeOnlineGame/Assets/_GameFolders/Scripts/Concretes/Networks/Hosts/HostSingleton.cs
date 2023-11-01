@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace MakeOnlineGame.Networks.Hosts
 {
@@ -19,6 +20,11 @@ namespace MakeOnlineGame.Networks.Hosts
             {
                 Destroy(this.gameObject);
             }
+        }
+
+        void OnDestroy()
+        {
+            HostManager?.Dispose();
         }
 
         public void CreateHost()

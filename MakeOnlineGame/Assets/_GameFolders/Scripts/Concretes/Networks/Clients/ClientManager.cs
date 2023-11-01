@@ -14,7 +14,7 @@ using UnityEngine.SceneManagement;
 
 namespace MakeOnlineGame.Networks.Clients
 {
-    public class ClientManager 
+    public class ClientManager : System.IDisposable
     {
         JoinAllocation _allocation;
         NetworkClient _networkClient;
@@ -63,6 +63,11 @@ namespace MakeOnlineGame.Networks.Clients
             NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
             
             NetworkManager.Singleton.StartClient();
+        }
+
+        public void Dispose()
+        {
+            _networkClient?.Dispose();
         }
     }
 }
