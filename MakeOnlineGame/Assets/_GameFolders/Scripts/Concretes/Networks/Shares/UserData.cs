@@ -8,5 +8,6 @@ namespace MakeOnlineGame.Networks.Shares
     public struct UserData
     {
         public string UserName;
+        public string UserID;
     }    
 }

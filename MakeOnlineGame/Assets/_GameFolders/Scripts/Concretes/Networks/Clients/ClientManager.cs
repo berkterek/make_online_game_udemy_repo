@@ -5,6 +5,7 @@ using MakeOnlineGame.Networks.Shares;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
+using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
@@ -16,10 +17,14 @@ namespace MakeOnlineGame.Networks.Clients
     public class ClientManager 
     {
         JoinAllocation _allocation;
+        NetworkClient _networkClient;
         
         public async UniTask<bool> InitializeAsync()
         {
             await UnityServices.InitializeAsync();
+
+            _networkClient = new NetworkClient(NetworkManager.Singleton);
+            
             Debug.Log("Connected to Unity Service");
 
             var state = await AuthenticationWrapper.DoAuthenticate();
@@ -48,7 +53,8 @@ namespace MakeOnlineGame.Networks.Clients
 
             UserData userData = new UserData()
             {
-                UserName = PlayerPrefs.GetString(NameSelectController.PLAYER_NAME_KEY, "Missing Name")
+                UserName = PlayerPrefs.GetString(NameSelectController.PLAYER_NAME_KEY, "Missing Name"),
+                UserID = AuthenticationService.Instance.PlayerId
             };
 
             var payload = JsonUtility.ToJson(userData);
