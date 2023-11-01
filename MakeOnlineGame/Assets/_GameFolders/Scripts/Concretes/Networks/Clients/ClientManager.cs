@@ -1,4 +1,7 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Text;
+using Cysharp.Threading.Tasks;
+using MakeOnlineGame.Controllers;
+using MakeOnlineGame.Networks.Shares;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
@@ -43,6 +46,16 @@ namespace MakeOnlineGame.Networks.Clients
             UnityTransport unityTransport = NetworkManager.Singleton.GetComponent<UnityTransport>();
             unityTransport.SetRelayServerData(new RelayServerData(_allocation, "dtls"));
 
+            UserData userData = new UserData()
+            {
+                UserName = PlayerPrefs.GetString(NameSelectController.PLAYER_NAME_KEY, "Missing Name")
+            };
+
+            var payload = JsonUtility.ToJson(userData);
+            byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
+
+            NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
+            
             NetworkManager.Singleton.StartClient();
         }
     }

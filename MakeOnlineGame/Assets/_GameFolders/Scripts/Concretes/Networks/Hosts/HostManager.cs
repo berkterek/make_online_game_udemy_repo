@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using Cysharp.Threading.Tasks;
+using MakeOnlineGame.Controllers;
+using MakeOnlineGame.Networks.Servers;
+using MakeOnlineGame.Networks.Shares;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
@@ -16,6 +20,7 @@ namespace MakeOnlineGame.Networks.Hosts
     {
         const int MAX_CONNECTION = 20;
 
+        NetworkServer _networkServer;
         Allocation _allocation;
         string _joinCode;
         string _lobbyId;
@@ -56,7 +61,10 @@ namespace MakeOnlineGame.Networks.Hosts
                 {
                     { "JoinCode", new DataObject(visibility: DataObject.VisibilityOptions.Member, value: _joinCode) }
                 };
-                var lobby = await Lobbies.Instance.CreateLobbyAsync("My Lobby", MAX_CONNECTION, createLobbyOptions);
+
+                string playerName = PlayerPrefs.GetString(NameSelectController.PLAYER_NAME_KEY, "Unknown");
+                var lobby = await Lobbies.Instance.CreateLobbyAsync($"{playerName}' Lobby", MAX_CONNECTION,
+                    createLobbyOptions);
                 _lobbyId = lobby.Id;
 
                 HearthBeatLobbyAsync(15);
@@ -66,6 +74,18 @@ namespace MakeOnlineGame.Networks.Hosts
                 Debug.LogError(e);
                 return;
             }
+
+            _networkServer = new NetworkServer(NetworkManager.Singleton);
+            
+            UserData userData = new UserData()
+            {
+                UserName = PlayerPrefs.GetString(NameSelectController.PLAYER_NAME_KEY, "Missing Name")
+            };
+
+            var payload = JsonUtility.ToJson(userData);
+            byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
+
+            NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
 
             NetworkManager.Singleton.StartHost();
 
@@ -77,7 +97,7 @@ namespace MakeOnlineGame.Networks.Hosts
             while (true)
             {
                 await Lobbies.Instance.SendHeartbeatPingAsync(_lobbyId);
-                await UniTask.Delay(System.TimeSpan.FromSeconds(waitSeconds), false,PlayerLoopTiming.Update);
+                await UniTask.Delay(System.TimeSpan.FromSeconds(waitSeconds), false, PlayerLoopTiming.Update);
             }
         }
     }

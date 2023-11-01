@@ -9,7 +9,7 @@ namespace MakeOnlineGame.Controllers
 {
     public class NameSelectController : MonoBehaviour
     {
-        string PLAYER_NAME_KEY = "PlayerName";
+        public static string PLAYER_NAME_KEY = "PlayerName";
         
         [SerializeField] TMP_InputField _nameInputField;
         [SerializeField] Button _connectButton;
