@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MakeOnlineGame.Controllers;
 using MakeOnlineGame.Networks.Shares;
 using Unity.Netcode;
 using UnityEngine;
@@ -31,6 +32,8 @@ namespace MakeOnlineGame.Networks.Servers
             _authIdToUserData[userData.UserID] = userData;
 
             response.Approved = true;
+            response.Position = SpawnPointController.GetRandomSpawnPosition();
+            response.Rotation = Quaternion.identity;
             response.CreatePlayerObject = true;
         }
         

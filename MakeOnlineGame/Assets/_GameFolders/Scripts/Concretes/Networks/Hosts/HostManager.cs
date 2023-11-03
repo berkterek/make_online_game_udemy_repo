@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -121,7 +120,7 @@ namespace MakeOnlineGame.Networks.Hosts
                 {
                     await Lobbies.Instance.DeleteLobbyAsync(_lobbyId);
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     Debug.Log(e);
                 }
