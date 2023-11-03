@@ -106,17 +106,39 @@ namespace MakeOnlineGame.Uis
                 PlayerName = value.PlayerName.Value,
                 Coin = 0
             });
+
+            value.CoinCollectHandler.CoinTotal.OnValueChanged += (int oldCoin, int newCoin) => HandleOnCoinValueChanged(value.OwnerClientId, newCoin);
         }
 
         void HandleOnPlayerDespawn(TankPlayerController value)
         {
-            if (_leaderboardEntityStates == null) return;
-
+            if (_leaderboardEntityStates == null || value == null) return;
+            
+            //TODO this code has bug will fixes
             foreach (var entity in _leaderboardEntityStates)
             {
                 if (entity.ClientId != value.OwnerClientId) continue;
-
+            
                 _leaderboardEntityStates.Remove(entity);
+                break;
+            }
+            
+            value.CoinCollectHandler.CoinTotal.OnValueChanged -= (int oldCoin, int newCoin) => HandleOnCoinValueChanged(value.OwnerClientId, newCoin);
+        }
+        
+        void HandleOnCoinValueChanged(ulong clientId, int newCoin)
+        {
+            for (int i = 0; i < _leaderboardEntityStates.Count; i++)
+            {
+                if(_leaderboardEntityStates[i].ClientId != clientId) continue;
+
+                _leaderboardEntityStates[i] = new LeaderboardEntityState()
+                {
+                    ClientId = _leaderboardEntityStates[i].ClientId,
+                    PlayerName = _leaderboardEntityStates[i].PlayerName,
+                    Coin = newCoin
+                };
+
                 break;
             }
         }

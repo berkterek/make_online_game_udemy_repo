@@ -6,7 +6,7 @@ namespace MakeOnlineGame.Handlers
 {
     public class CoinCollectHandler : NetworkBehaviour
     {
-        public NetworkVariable<int> _coinTotal = new NetworkVariable<int>();
+        public NetworkVariable<int> CoinTotal = new NetworkVariable<int>();
 
         void OnTriggerEnter2D(Collider2D other)
         {
@@ -16,7 +16,7 @@ namespace MakeOnlineGame.Handlers
 
                 if (!IsServer) return;
 
-                _coinTotal.Value += coinValue;
+                CoinTotal.Value += coinValue;
             }
         }
     }

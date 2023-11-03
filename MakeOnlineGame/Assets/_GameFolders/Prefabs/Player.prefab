@@ -170,6 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: {fileID: 911917385412913215}
+  _coinCollectHandler: {fileID: 697519759040331615}
   _cinemachineVirtual: {fileID: 8397771294029191677}
   PlayerName:
     m_InternalValue:
@@ -315,7 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f1a26600e84f8f49a5084c6ab157771, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coinTotal:
+  CoinTotal:
     m_InternalValue: 0
 --- !u!58 &8941469056300256194
 CircleCollider2D:

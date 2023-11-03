@@ -1,5 +1,6 @@
 using Cinemachine;
 using MakeOnlineGame.Combats;
+using MakeOnlineGame.Handlers;
 using MakeOnlineGame.Networks.Hosts;
 using Unity.Collections;
 using Unity.Netcode;
@@ -10,6 +11,7 @@ namespace MakeOnlineGame.Controllers
     public class TankPlayerController : NetworkBehaviour
     {
         [SerializeField] Health _health;
+        [SerializeField] CoinCollectHandler _coinCollectHandler;
         [SerializeField] CinemachineVirtualCamera _cinemachineVirtual;
 
         public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
@@ -18,6 +20,7 @@ namespace MakeOnlineGame.Controllers
         public static event System.Action<TankPlayerController> OnPlayerDespawned;
 
         public Health Health => _health;
+        public CoinCollectHandler CoinCollectHandler => _coinCollectHandler;
         
         public override void OnNetworkSpawn()
         {
