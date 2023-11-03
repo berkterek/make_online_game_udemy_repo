@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 548772014d67c8a46989c1d753edb8a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNameText: {fileID: 0}
+  _health: {fileID: 911917385412913215}
   _cinemachineVirtual: {fileID: 8397771294029191677}
   PlayerName:
     m_InternalValue:
