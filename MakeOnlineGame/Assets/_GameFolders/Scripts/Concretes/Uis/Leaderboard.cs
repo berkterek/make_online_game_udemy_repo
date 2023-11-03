@@ -1,0 +1,124 @@
+using System.Collections.Generic;
+using System.Linq;
+using MakeOnlineGame.Controllers;
+using Unity.Netcode;
+using UnityEngine;
+
+namespace MakeOnlineGame.Uis
+{
+    public class Leaderboard : NetworkBehaviour
+    {
+        [SerializeField] Transform _leaderboardEntityHolder;
+        [SerializeField] LeaderboardEntityDisplay _prefab;
+
+        NetworkList<LeaderboardEntityState> _leaderboardEntityStates;
+        List<LeaderboardEntityDisplay> _leaderboardEntityDisplays;
+
+        void Awake()
+        {
+            _leaderboardEntityStates = new NetworkList<LeaderboardEntityState>();
+            _leaderboardEntityDisplays = new List<LeaderboardEntityDisplay>();
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            if (IsClient)
+            {
+                _leaderboardEntityStates.OnListChanged += HandleOnListChanged;
+
+                foreach (var leaderboardEntityState in _leaderboardEntityStates)
+                {
+                    HandleOnListChanged(new NetworkListEvent<LeaderboardEntityState>()
+                    {
+                        Type = NetworkListEvent<LeaderboardEntityState>.EventType.Add,
+                        Value = leaderboardEntityState
+                    });
+                }
+            }
+
+            if (IsServer)
+            {
+                TankPlayerController[] players = FindObjectsByType<TankPlayerController>(FindObjectsSortMode.None);
+
+                foreach (var player in players)
+                {
+                    HandleOnPlayerSpawn(player);
+                }
+
+                TankPlayerController.OnPlayerSpawned += HandleOnPlayerSpawn;
+                TankPlayerController.OnPlayerDespawned += HandleOnPlayerDespawn;
+            }
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            if (IsClient)
+            {
+                _leaderboardEntityStates.OnListChanged -= HandleOnListChanged;
+            }
+
+            if (IsServer)
+            {
+                TankPlayerController.OnPlayerSpawned -= HandleOnPlayerSpawn;
+                TankPlayerController.OnPlayerDespawned -= HandleOnPlayerDespawn;
+            }
+        }
+
+        void HandleOnListChanged(NetworkListEvent<LeaderboardEntityState> changeEvent)
+        {
+            switch (changeEvent.Type)
+            {
+                case NetworkListEvent<LeaderboardEntityState>.EventType.Add:
+                    var addValue = changeEvent.Value;
+                    if (_leaderboardEntityDisplays.All(x => x.ClientId != addValue.ClientId))
+                    {
+                        var leaderboardEntityDisplay = Instantiate(_prefab, _leaderboardEntityHolder);
+                        leaderboardEntityDisplay.SetData(addValue.ClientId,addValue.PlayerName,addValue.Coin);
+                        _leaderboardEntityDisplays.Add(leaderboardEntityDisplay);    
+                    }
+                    break;
+                case NetworkListEvent<LeaderboardEntityState>.EventType.Remove:
+                    var removeValue = changeEvent.Value;
+                    var removeDisplay = _leaderboardEntityDisplays.FirstOrDefault(x => x.ClientId == removeValue.ClientId);
+                    if (removeDisplay != null)
+                    {
+                        Destroy(removeDisplay.gameObject);
+                        _leaderboardEntityDisplays.Remove(removeDisplay);
+                    }
+                    break;
+                case NetworkListEvent<LeaderboardEntityState>.EventType.Value:
+                    var updatedValue = changeEvent.Value;
+                    var updatedDisplay =
+                        _leaderboardEntityDisplays.FirstOrDefault(x => x.ClientId == updatedValue.ClientId);
+                    if (updatedDisplay != null)
+                    {
+                        updatedDisplay.UpdateCoin(updatedValue.Coin);
+                    }
+                    break;
+            }
+        }
+
+        void HandleOnPlayerSpawn(TankPlayerController value)
+        {
+            _leaderboardEntityStates.Add(new LeaderboardEntityState()
+            {
+                ClientId = value.OwnerClientId,
+                PlayerName = value.PlayerName.Value,
+                Coin = 0
+            });
+        }
+
+        void HandleOnPlayerDespawn(TankPlayerController value)
+        {
+            if (_leaderboardEntityStates == null) return;
+
+            foreach (var entity in _leaderboardEntityStates)
+            {
+                if (entity.ClientId != value.OwnerClientId) continue;
+
+                _leaderboardEntityStates.Remove(entity);
+                break;
+            }
+        }
+    }
+}

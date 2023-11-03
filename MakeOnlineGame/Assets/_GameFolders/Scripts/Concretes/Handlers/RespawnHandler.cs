@@ -13,7 +13,7 @@ namespace MakeOnlineGame.Handlers
         {
             if (!IsServer) return;
 
-            TankPlayerController[] players = FindObjectsOfType<TankPlayerController>();
+            TankPlayerController[] players = FindObjectsByType<TankPlayerController>(FindObjectsSortMode.None);
 
             foreach (var player in players)
             {
