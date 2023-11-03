@@ -30,6 +30,8 @@ namespace MakeOnlineGame.Networks.Hosts
         string _joinCode;
         string _lobbyId;
 
+        public NetworkServer NetworkServer => _networkServer;
+
         public async UniTask StartHostAsync()
         {
             try

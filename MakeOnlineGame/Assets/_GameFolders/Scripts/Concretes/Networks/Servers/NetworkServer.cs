@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using MakeOnlineGame.Networks.Shares;
 using Unity.Netcode;
@@ -65,7 +64,20 @@ namespace MakeOnlineGame.Networks.Servers
             
             if(_networkManager.IsListening) _networkManager.Shutdown();
 
-            GC.SuppressFinalize(this);
+            System.GC.SuppressFinalize(this);
+        }
+
+        public UserData GetUserDataByClientId(ulong clientId)
+        {
+            if (_clientIdToAuth.TryGetValue(clientId, out string auth))
+            {
+                if (_authIdToUserData.TryGetValue(auth, out UserData userData))
+                {
+                    return userData;
+                }
+            }
+
+            return default;
         }
     }    
 }
