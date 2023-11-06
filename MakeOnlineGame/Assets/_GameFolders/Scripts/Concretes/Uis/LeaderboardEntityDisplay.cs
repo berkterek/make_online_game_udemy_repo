@@ -1,6 +1,6 @@
-﻿using System;
-using TMPro;
+﻿using TMPro;
 using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace MakeOnlineGame.Uis
@@ -8,6 +8,7 @@ namespace MakeOnlineGame.Uis
     public class LeaderboardEntityDisplay : MonoBehaviour
     {
         [SerializeField] TMP_Text _text;
+        [SerializeField] Color _color;
 
         FixedString32Bytes _playerName;
         
@@ -24,6 +25,11 @@ namespace MakeOnlineGame.Uis
             ClientId = clientId;
             _playerName = playerName;
 
+            if (clientId == NetworkManager.Singleton.LocalClientId)
+            {
+                _text.color = _color;
+            }
+
             UpdateCoin(coin);
         }
 
@@ -34,9 +40,9 @@ namespace MakeOnlineGame.Uis
             UpdateText();
         }
 
-        void UpdateText()
+        public void UpdateText()
         {
-            _text.SetText($"{_playerName}:{Coin}");
+            _text.SetText($"{transform.GetSiblingIndex() + 1}. {_playerName}:{Coin}");
         }
     }
 }

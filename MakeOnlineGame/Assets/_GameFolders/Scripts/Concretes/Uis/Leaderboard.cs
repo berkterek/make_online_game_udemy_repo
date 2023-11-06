@@ -10,6 +10,7 @@ namespace MakeOnlineGame.Uis
     {
         [SerializeField] Transform _leaderboardEntityHolder;
         [SerializeField] LeaderboardEntityDisplay _prefab;
+        [SerializeField] int _entitiesToDisplay = 8;
 
         NetworkList<LeaderboardEntityState> _leaderboardEntityStates;
         List<LeaderboardEntityDisplay> _leaderboardEntityDisplays;
@@ -95,6 +96,27 @@ namespace MakeOnlineGame.Uis
                         updatedDisplay.UpdateCoin(updatedValue.Coin);
                     }
                     break;
+            }
+            
+            _leaderboardEntityDisplays.Sort((first,second) => second.Coin.CompareTo(first.Coin));
+
+            for (int i = 0; i < _entitiesToDisplay; i++)
+            {
+                _leaderboardEntityDisplays[i].transform.SetSiblingIndex(i);
+                _leaderboardEntityDisplays[i].UpdateText();
+                bool shouldShow = i <= _entitiesToDisplay - 1;
+                _leaderboardEntityDisplays[i].gameObject.SetActive(shouldShow);
+            }
+
+            var localLeaderboardEntity = _leaderboardEntityDisplays.FirstOrDefault(x => x.ClientId == NetworkManager.Singleton.LocalClientId);
+
+            if (localLeaderboardEntity != null)
+            {
+                if (localLeaderboardEntity.transform.GetSiblingIndex() >= _entitiesToDisplay)
+                {
+                    _leaderboardEntityHolder.GetChild(_entitiesToDisplay - 1).gameObject.SetActive(false);
+                    localLeaderboardEntity.gameObject.SetActive(true);
+                }
             }
         }
 
