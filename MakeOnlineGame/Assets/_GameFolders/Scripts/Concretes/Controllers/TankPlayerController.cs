@@ -13,6 +13,7 @@ namespace MakeOnlineGame.Controllers
         [SerializeField] Health _health;
         [SerializeField] CoinCollectHandler _coinCollectHandler;
         [SerializeField] CinemachineVirtualCamera _cinemachineVirtual;
+        [SerializeField] SpriteRenderer _minimapSpriteRenderer;
 
         public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
 
@@ -34,6 +35,7 @@ namespace MakeOnlineGame.Controllers
             if (IsOwner)
             {
                 _cinemachineVirtual.Priority = 12;
+                _minimapSpriteRenderer.color = Color.blue;
             }
         }
 
