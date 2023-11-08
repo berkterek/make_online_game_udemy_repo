@@ -74,18 +74,21 @@ namespace MakeOnlineGame.Uis
                     if (_leaderboardEntityDisplays.All(x => x.ClientId != addValue.ClientId))
                     {
                         var leaderboardEntityDisplay = Instantiate(_prefab, _leaderboardEntityHolder);
-                        leaderboardEntityDisplay.SetData(addValue.ClientId,addValue.PlayerName,addValue.Coin);
-                        _leaderboardEntityDisplays.Add(leaderboardEntityDisplay);    
+                        leaderboardEntityDisplay.SetData(addValue.ClientId, addValue.PlayerName, addValue.Coin);
+                        _leaderboardEntityDisplays.Add(leaderboardEntityDisplay);
                     }
+
                     break;
                 case NetworkListEvent<LeaderboardEntityState>.EventType.Remove:
                     var removeValue = changeEvent.Value;
-                    var removeDisplay = _leaderboardEntityDisplays.FirstOrDefault(x => x.ClientId == removeValue.ClientId);
+                    var removeDisplay =
+                        _leaderboardEntityDisplays.FirstOrDefault(x => x.ClientId == removeValue.ClientId);
                     if (removeDisplay != null)
                     {
                         Destroy(removeDisplay.gameObject);
                         _leaderboardEntityDisplays.Remove(removeDisplay);
                     }
+
                     break;
                 case NetworkListEvent<LeaderboardEntityState>.EventType.Value:
                     var updatedValue = changeEvent.Value;
@@ -95,20 +98,24 @@ namespace MakeOnlineGame.Uis
                     {
                         updatedDisplay.UpdateCoin(updatedValue.Coin);
                     }
+
                     break;
             }
-            
-            _leaderboardEntityDisplays.Sort((first,second) => second.Coin.CompareTo(first.Coin));
+
+            _leaderboardEntityDisplays.Sort((first, second) => second.Coin.CompareTo(first.Coin));
 
             for (int i = 0; i < _entitiesToDisplay; i++)
             {
+                if (i >= _leaderboardEntityDisplays.Count) break;
+                
                 _leaderboardEntityDisplays[i].transform.SetSiblingIndex(i);
                 _leaderboardEntityDisplays[i].UpdateText();
                 bool shouldShow = i <= _entitiesToDisplay - 1;
                 _leaderboardEntityDisplays[i].gameObject.SetActive(shouldShow);
             }
 
-            var localLeaderboardEntity = _leaderboardEntityDisplays.FirstOrDefault(x => x.ClientId == NetworkManager.Singleton.LocalClientId);
+            var localLeaderboardEntity =
+                _leaderboardEntityDisplays.FirstOrDefault(x => x.ClientId == NetworkManager.Singleton.LocalClientId);
 
             if (localLeaderboardEntity != null)
             {
@@ -129,30 +136,32 @@ namespace MakeOnlineGame.Uis
                 Coin = 0
             });
 
-            value.CoinCollectHandler.CoinTotal.OnValueChanged += (int oldCoin, int newCoin) => HandleOnCoinValueChanged(value.OwnerClientId, newCoin);
+            value.CoinCollectHandler.CoinTotal.OnValueChanged += (int oldCoin, int newCoin) =>
+                HandleOnCoinValueChanged(value.OwnerClientId, newCoin);
         }
 
         void HandleOnPlayerDespawn(TankPlayerController value)
         {
             if (_leaderboardEntityStates == null || value == null) return;
-            
+
             //TODO this code has bug will fixes
             foreach (var entity in _leaderboardEntityStates)
             {
                 if (entity.ClientId != value.OwnerClientId) continue;
-            
+
                 _leaderboardEntityStates.Remove(entity);
                 break;
             }
-            
-            value.CoinCollectHandler.CoinTotal.OnValueChanged -= (int oldCoin, int newCoin) => HandleOnCoinValueChanged(value.OwnerClientId, newCoin);
+
+            value.CoinCollectHandler.CoinTotal.OnValueChanged -= (int oldCoin, int newCoin) =>
+                HandleOnCoinValueChanged(value.OwnerClientId, newCoin);
         }
-        
+
         void HandleOnCoinValueChanged(ulong clientId, int newCoin)
         {
             for (int i = 0; i < _leaderboardEntityStates.Count; i++)
             {
-                if(_leaderboardEntityStates[i].ClientId != clientId) continue;
+                if (_leaderboardEntityStates[i].ClientId != clientId) continue;
 
                 _leaderboardEntityStates[i] = new LeaderboardEntityState()
                 {
