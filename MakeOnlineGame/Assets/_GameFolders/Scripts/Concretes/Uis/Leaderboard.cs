@@ -149,7 +149,14 @@ namespace MakeOnlineGame.Uis
             {
                 if (entity.ClientId != value.OwnerClientId) continue;
 
-                _leaderboardEntityStates.Remove(entity);
+                if (_leaderboardEntityStates.IsDirty())
+                {
+                    _leaderboardEntityStates.Clear();
+                }
+                else if (_leaderboardEntityStates.Contains(entity))
+                {
+                    _leaderboardEntityStates.Remove(entity);
+                }
                 break;
             }
 
