@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e904545c681c4035a0be6f929281c712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 5947139717835489089, guid: cbdf0493c5927644aa8599ea8d68e114, type: 3}
+  _playerPrefab: {fileID: 5855938600861849331, guid: cbdf0493c5927644aa8599ea8d68e114, type: 3}
+  _keepCoinPercentage: 50
 --- !u!114 &3523846531176050411
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -7,7 +7,8 @@ namespace MakeOnlineGame.Handlers
 {
     public class RespawnHandler : NetworkBehaviour
     {
-        [SerializeField] NetworkObject _playerPrefab;
+        [SerializeField] TankPlayerController _playerPrefab;
+        [SerializeField] float _keepCoinPercentage;
 
         public override void OnNetworkSpawn()
         {
@@ -51,18 +52,21 @@ namespace MakeOnlineGame.Handlers
 
         private void HandleDead(TankPlayerController value)
         {
+            int lastCoinValue = (int)(value.CoinCollectHandler.CoinTotal.Value * (_keepCoinPercentage / 100f));
             Destroy(value.gameObject);
 
-            RespawnPlayerAsync(value.OwnerClientId);
+            RespawnPlayerAsync(value.OwnerClientId, lastCoinValue);
         }
 
-        private async UniTask RespawnPlayerAsync(ulong clientId)
+        private async UniTask RespawnPlayerAsync(ulong clientId, int keptCoins)
         {
             await UniTask.Yield();
 
             var playerInstance = Instantiate(_playerPrefab, SpawnPointController.GetRandomSpawnPosition(), Quaternion.identity);
+
+            playerInstance.NetworkObject.SpawnAsPlayerObject(clientId);
             
-            playerInstance.SpawnAsPlayerObject(clientId);
+            playerInstance.CoinCollectHandler.CoinTotal.Value += keptCoins;
         }
     }
 }
