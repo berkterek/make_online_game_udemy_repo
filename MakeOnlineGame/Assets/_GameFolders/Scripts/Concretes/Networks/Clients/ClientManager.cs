@@ -69,5 +69,10 @@ namespace MakeOnlineGame.Networks.Clients
         {
             _networkClient?.Dispose();
         }
+
+        public void Disconnect()
+        {
+            _networkClient.Disconnect();
+        }
     }
 }

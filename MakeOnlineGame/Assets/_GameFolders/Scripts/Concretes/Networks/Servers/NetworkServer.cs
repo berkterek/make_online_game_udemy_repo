@@ -11,6 +11,7 @@ namespace MakeOnlineGame.Networks.Servers
         readonly NetworkManager _networkManager;
         readonly Dictionary<ulong, string> _clientIdToAuth;
         readonly Dictionary<string, UserData> _authIdToUserData;
+        public event System.Action<string > OnClientLeft;
 
         public NetworkServer(NetworkManager networkManager)
         {
@@ -48,6 +49,7 @@ namespace MakeOnlineGame.Networks.Servers
             {
                 _clientIdToAuth.Remove(clientNetworkId);
                 _authIdToUserData.Remove(authId);
+                OnClientLeft?.Invoke(authId);
             }
         }
 
@@ -82,6 +84,6 @@ namespace MakeOnlineGame.Networks.Servers
 
             return default;
         }
-    }    
+    }
 }
 

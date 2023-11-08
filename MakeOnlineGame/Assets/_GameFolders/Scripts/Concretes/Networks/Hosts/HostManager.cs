@@ -96,6 +96,8 @@ namespace MakeOnlineGame.Networks.Hosts
 
             NetworkManager.Singleton.StartHost();
 
+            _networkServer.OnClientLeft += HandleOnClientLeft;
+
             NetworkManager.Singleton.SceneManager.LoadScene("Game", LoadSceneMode.Single);
         }
 
@@ -110,7 +112,12 @@ namespace MakeOnlineGame.Networks.Hosts
             }
         }
 
-        public async void Dispose()
+        public void Dispose()
+        {
+            Shutdown();
+        }
+
+        public async void Shutdown()
         {
             _cancellationTokenSource.Cancel();
 
@@ -128,7 +135,21 @@ namespace MakeOnlineGame.Networks.Hosts
                 _lobbyId = string.Empty;
             }
             
+            _networkServer.OnClientLeft -= HandleOnClientLeft;
+            
             _networkServer?.Dispose();
+        }
+        
+        async void HandleOnClientLeft(string authId)
+        {
+            try
+            {
+                await LobbyService.Instance.RemovePlayerAsync(_lobbyId, authId);
+            }
+            catch(System.Exception e)
+            {
+                Debug.Log(e);
+            }
         }
     }
 }
