@@ -49,7 +49,7 @@ namespace MakeOnlineGame.Handlers
             }
         }
         
-        void HandleOnPlayerDead(Health health)
+        async void HandleOnPlayerDead(Health health)
         {
             int bountyValue = (int)(CoinTotal.Value * (_bountyPercentage / 100f));
             int bountyCoinValue = bountyValue / _bountyCoinCount;
@@ -58,7 +58,7 @@ namespace MakeOnlineGame.Handlers
 
             for (int i = 0; i < _bountyCoinCount; i++)
             {
-                var coinInstance = Instantiate(_coinPrefab, GetSpawnPoint().GetAwaiter().GetResult(), Quaternion.identity);
+                var coinInstance = Instantiate(_coinPrefab, await GetSpawnPoint(), Quaternion.identity);
                 coinInstance.SetValue(bountyCoinValue);
                 coinInstance.NetworkObject.Spawn();
             }
@@ -76,6 +76,11 @@ namespace MakeOnlineGame.Handlers
                 
                 await UniTask.Yield();
             }
+        }
+
+        public void SpendCoins(int coinValue)
+        {
+            CoinTotal.Value -= coinValue;
         }
     }
 }

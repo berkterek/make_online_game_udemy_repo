@@ -15,12 +15,74 @@ namespace MakeOnlineGame.Controllers
         [SerializeField] int _healthPerTick = 10;
 
         List<TankPlayerController> _playersInZone;
+        NetworkVariable<int> _healPower = new NetworkVariable<int>();
 
+        float _currentCooldown;
+        float _tickTimer;
+        
         public override void OnNetworkSpawn()
+        {
+            if (IsServer)
+            {
+                _playersInZone = new List<TankPlayerController>();
+                _healPower.Value = _maxHealPower;
+                _currentCooldown = _healCooldown;
+            }
+
+            if (IsClient)
+            {
+                _healPower.OnValueChanged += HandleOnValueChanged;
+                HandleOnValueChanged(0,_healPower.Value);
+            }
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            if (IsClient) _healPower.OnValueChanged -= HandleOnValueChanged;
+        }
+
+        void Update()
         {
             if (!IsServer) return;
 
-            _playersInZone = new List<TankPlayerController>();
+            if (_currentCooldown > 0f)
+            {
+                _currentCooldown -= Time.deltaTime;
+
+                if (_currentCooldown <= 0f)
+                {
+                    _healPower.Value = _maxHealPower;
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            _tickTimer += Time.deltaTime;
+            if (_tickTimer >= 1f / _healthPerTick)
+            {
+                foreach (var player in _playersInZone)
+                {
+                    if (_healPower.Value == 0) break;
+                    
+                    if(player.Health.CurrentHealth.Value == player.Health.MaxHealth) continue;
+                    
+                    if(player.CoinCollectHandler.CoinTotal.Value < _coinsPerTick) continue;
+
+                    player.CoinCollectHandler.SpendCoins(_coinsPerTick);
+                    player.Health.RestoreHealth(_healthPerTick);
+
+                    _healPower.Value -= 1;
+
+                    if (_healPower.Value == 0)
+                    {
+                        _currentCooldown = _healCooldown;
+                    }
+                }
+
+                _tickTimer = _tickTimer % (1 / _healCooldown);
+            }
         }
 
         void OnTriggerEnter2D(Collider2D other)
@@ -45,6 +107,11 @@ namespace MakeOnlineGame.Controllers
             
             _playersInZone.Remove(tankPlayerController);
             Debug.Log("Player Exit");
+        }
+        
+        void HandleOnValueChanged(int previousValue, int newValue)
+        {
+            _healPowerBarImage.fillAmount = (float)newValue / _maxHealPower;
         }
     }    
 }

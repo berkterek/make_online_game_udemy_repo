@@ -38,9 +38,9 @@ namespace MakeOnlineGame.Controllers
             coinInstance.OnCollected += HandleOnCoinCollected;
         }
 
-        void HandleOnCoinCollected(RespawningCoinController coin)
+        async void HandleOnCoinCollected(RespawningCoinController coin)
         {
-            coin.transform.position = GetSpawnPoint().GetAwaiter().GetResult();
+            coin.transform.position = await GetSpawnPoint();
             coin.Reset();
         }
 
