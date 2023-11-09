@@ -1,5 +1,6 @@
 using MakeOnlineGame.Networks.Clients;
 using MakeOnlineGame.Networks.Hosts;
+using MakeOnlineGame.Networks.Servers;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -10,6 +11,7 @@ namespace MakeOnlineGame.Controllers
     {
         [SerializeField] ClientSingleton _clientSingleton;
         [SerializeField] HostSingleton _hostSingleton;
+        [SerializeField] ServerSingleton _serverSingleton;
         
         ReactiveProperty<bool> _isDedicatedServer = new ReactiveProperty<bool>(); 
         
@@ -21,7 +23,10 @@ namespace MakeOnlineGame.Controllers
             {
                 if (isDedicatedServer)
                 {
-                
+                    var serverSingleton = Instantiate(_serverSingleton);
+                    await serverSingleton.CreateServerAsync();
+
+                    await serverSingleton.ServerManager.StartGameServerAsync();
                 }
                 else
                 {

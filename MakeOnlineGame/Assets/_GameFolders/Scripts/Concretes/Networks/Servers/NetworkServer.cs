@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using MakeOnlineGame.Controllers;
 using MakeOnlineGame.Networks.Shares;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
 namespace MakeOnlineGame.Networks.Servers
@@ -22,6 +23,13 @@ namespace MakeOnlineGame.Networks.Servers
 
             _networkManager.ConnectionApprovalCallback += HandleOnConnectionApprovalCallback;
             _networkManager.OnServerStarted += HandleOnServerStarted;
+        }
+
+        public bool OpenConnection(string ip, int port)
+        {
+            var unityTransport = _networkManager.gameObject.GetComponent<UnityTransport>();
+            unityTransport.SetConnectionData(ip, (ushort)port);
+            return _networkManager.StartServer();
         }
 
         void HandleOnConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
