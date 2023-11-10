@@ -10,6 +10,7 @@ namespace MakeOnlineGame.Controllers
 {
     public class TankPlayerController : NetworkBehaviour
     {
+        [SerializeField] Texture2D _crosshair;
         [SerializeField] Health _health;
         [SerializeField] CoinCollectHandler _coinCollectHandler;
         [SerializeField] CinemachineVirtualCamera _cinemachineVirtual;
@@ -36,6 +37,7 @@ namespace MakeOnlineGame.Controllers
             {
                 _cinemachineVirtual.Priority = 12;
                 _minimapSpriteRenderer.color = Color.blue;
+                Cursor.SetCursor(_crosshair, new Vector2(_crosshair.width / 2f, _crosshair.height / 2f), CursorMode.Auto);
             }
         }
 
