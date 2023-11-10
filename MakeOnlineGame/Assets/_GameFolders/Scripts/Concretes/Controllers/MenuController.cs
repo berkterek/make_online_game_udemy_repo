@@ -1,4 +1,3 @@
-using System;
 using MakeOnlineGame.Networks.Clients;
 using MakeOnlineGame.Networks.Hosts;
 using TMPro;
@@ -14,7 +13,11 @@ namespace MakeOnlineGame.Controllers
         [SerializeField] TMP_Text _searhingText;
         [SerializeField] Button _hostButton;
         [SerializeField] Button _clientButton;
-        [SerializeField] Button _findMatch;
+        [SerializeField] Button _findMatchButton;
+        [SerializeField] TMP_Text _findMatchText;
+
+        bool _isMatchMakingButtonPressed = false;
+        bool _isMatchCanceling = false;
 
         void Start()
         {
@@ -30,14 +33,14 @@ namespace MakeOnlineGame.Controllers
         {
             _hostButton.onClick.AddListener(HandleOnHostButtonClicked);
             _clientButton.onClick.AddListener(HandleOnClientButtonClicked);
-            _findMatch.onClick.AddListener(HandleOnFindMatch);
+            _findMatchButton.onClick.AddListener(HandleOnFindMatch);
         }
 
         void OnDisable()
         {
             _hostButton.onClick.RemoveListener(HandleOnHostButtonClicked);
             _clientButton.onClick.RemoveListener(HandleOnClientButtonClicked);
-            _findMatch.onClick.RemoveListener(HandleOnFindMatch);
+            _findMatchButton.onClick.RemoveListener(HandleOnFindMatch);
         }
         
         async void HandleOnHostButtonClicked()
@@ -50,9 +53,28 @@ namespace MakeOnlineGame.Controllers
             await ClientSingleton.Instance.ClientManager.StartClientAsync(_joinCodeInputField.text);
         }
         
-        void HandleOnFindMatch()
+        async void HandleOnFindMatch()
         {
+            if (_isMatchCanceling) return;
             
+            if (_isMatchMakingButtonPressed)
+            {
+                _searhingText.SetText("Canceling...");
+                _isMatchCanceling = true;
+
+                //after cancel process
+                _isMatchCanceling = false;
+                _isMatchMakingButtonPressed = false;
+                _searhingText.SetText("");
+                _findMatchText.SetText("Find Match");
+            }
+            else
+            {
+                _findMatchText.SetText("Cancel");
+                _searhingText.SetText("Searching...");
+
+                _isMatchMakingButtonPressed = true;    
+            }
         }
     }    
 }

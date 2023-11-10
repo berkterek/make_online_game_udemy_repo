@@ -18,10 +18,24 @@ namespace MakeOnlineGame.Networks.Shares
         public Map Map;
         public GameMode GameMode;
         public GameQueue GameQueue;
-        
+
         public string ToMultiplayerQueue()
         {
-            return string.Empty;
+            string gameQueue;
+            switch (GameQueue)
+            {
+                case GameQueue.Solo:
+                    gameQueue = "solo-queue";
+                    break;
+                case GameQueue.Team:
+                    gameQueue = "team-queue";
+                    break;
+                default:
+                    gameQueue = "none";
+                    break;
+            }
+
+            return gameQueue;
         }
     }
 
@@ -37,5 +51,7 @@ namespace MakeOnlineGame.Networks.Shares
 
     public enum GameQueue : byte
     {
+        Solo,
+        Team
     }
 }
